@@ -7,6 +7,8 @@ import androidx.core.content.res.ResourcesCompat;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -32,17 +34,12 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-        bt_Show.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                    notifyUser("Lorem ipsum dolor sit amet" +
-                            " consectetur adipisicing elit. Fuga quis " +
-                            "facilis delectus eius est asperiores laudantium " +
-                            "doloremque quasi neque, dolore aut, nobis cumque" +
-                            " totam deleniti. Necessitatibus, odit sint! " +
-                            " est pariatur aliquid?");
-            }
-        });
+        bt_Show.setOnClickListener(view -> notifyUser("Lorem ipsum dolor sit amet" +
+                " consectetur adipisicing elit. Fuga quis " +
+                "facilis delectus eius est asperiores laudantium " +
+                "doloremque quasi neque, dolore aut, nobis cumque" +
+                " totam deleniti. Necessitatibus, odit sint! " +
+                " est pariatur aliquid?"));
 
     }
     private void notifyUser(String message)
@@ -52,6 +49,11 @@ public class MainActivity extends AppCompatActivity {
       BitmapDrawable bd = (BitmapDrawable) drawable;
       Bitmap largeIcon = bd.getBitmap();
 
+        Intent intent = new Intent(this,NextActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
+                Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this,0,intent,PendingIntent.FLAG_IMMUTABLE);
+
 
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(this,"channel")
@@ -59,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
                         .setContentTitle("Message")
                         .setLargeIcon(largeIcon)
                         .setContentText(message)
+                        .setContentIntent(pendingIntent)
                         .setAutoCancel(true);
         NotificationManagerCompat managerCompat = NotificationManagerCompat.from(this);
         managerCompat.notify(1,builder.build());
